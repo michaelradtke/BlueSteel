@@ -183,5 +183,4 @@ class SchemaDescriptorTests: XCTestCase {
 			print("### Parent binary size: \(binaryValue.count) bytes ###")
 		}
 	}
-    
 }

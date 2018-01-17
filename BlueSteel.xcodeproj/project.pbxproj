@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		273640C31FE2669900000BD4 /* SchemaDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273640C21FE2669900000BD4 /* SchemaDescriptor.swift */; };
 		273640C51FE2777B00000BD4 /* SchemaDescriptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273640C41FE2777B00000BD4 /* SchemaDescriptorTests.swift */; };
+		27CC7CF0200E56F400EDD3EA /* SchemedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CC7CEF200E56F400EDD3EA /* SchemedContainer.swift */; };
+		27CC7CF2200F8E5600EDD3EA /* SchemedContainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CC7CF1200F8E5600EDD3EA /* SchemedContainerTests.swift */; };
 		3B0313861DB571DF00AAA59D /* AvroConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B03137C1DB571DF00AAA59D /* AvroConvertible.swift */; };
 		3B0313871DB571DF00AAA59D /* AvroDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B03137D1DB571DF00AAA59D /* AvroDecoder.swift */; };
 		3B0313881DB571DF00AAA59D /* AvroEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B03137E1DB571DF00AAA59D /* AvroEncoder.swift */; };
@@ -40,6 +42,8 @@
 /* Begin PBXFileReference section */
 		273640C21FE2669900000BD4 /* SchemaDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaDescriptor.swift; sourceTree = "<group>"; };
 		273640C41FE2777B00000BD4 /* SchemaDescriptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaDescriptorTests.swift; sourceTree = "<group>"; };
+		27CC7CEF200E56F400EDD3EA /* SchemedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemedContainer.swift; sourceTree = "<group>"; };
+		27CC7CF1200F8E5600EDD3EA /* SchemedContainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemedContainerTests.swift; sourceTree = "<group>"; };
 		3B03137C1DB571DF00AAA59D /* AvroConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvroConvertible.swift; sourceTree = "<group>"; };
 		3B03137D1DB571DF00AAA59D /* AvroDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvroDecoder.swift; sourceTree = "<group>"; };
 		3B03137E1DB571DF00AAA59D /* AvroEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvroEncoder.swift; sourceTree = "<group>"; };
@@ -99,6 +103,7 @@
 				3B0313841DB571DF00AAA59D /* Schema.swift */,
 				3B0313851DB571DF00AAA59D /* Varint.swift */,
 				273640C21FE2669900000BD4 /* SchemaDescriptor.swift */,
+				27CC7CEF200E56F400EDD3EA /* SchemedContainer.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -153,6 +158,7 @@
 				3BA3EC2F1DB651FD00E4F888 /* AvroValueTests.swift */,
 				3BA3EC301DB651FD00E4F888 /* VarintTests.swift */,
 				273640C41FE2777B00000BD4 /* SchemaDescriptorTests.swift */,
+				27CC7CF1200F8E5600EDD3EA /* SchemedContainerTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -280,6 +286,7 @@
 				3B0313891DB571DF00AAA59D /* AvroValue.swift in Sources */,
 				273640C31FE2669900000BD4 /* SchemaDescriptor.swift in Sources */,
 				3B03138D1DB571DF00AAA59D /* CCWrapper.c in Sources */,
+				27CC7CF0200E56F400EDD3EA /* SchemedContainer.swift in Sources */,
 				3B03138A1DB571DF00AAA59D /* AvroValueEncoding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,6 +301,7 @@
 				3BA3EC311DB651FD00E4F888 /* AvroDecoderTests.swift in Sources */,
 				3BA3EC351DB651FD00E4F888 /* VarintTests.swift in Sources */,
 				3BA3EC341DB651FD00E4F888 /* AvroValueTests.swift in Sources */,
+				27CC7CF2200F8E5600EDD3EA /* SchemedContainerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

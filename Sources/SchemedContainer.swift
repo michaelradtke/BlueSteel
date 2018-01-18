@@ -20,18 +20,18 @@ public struct SendingSchemedContainer {
 		self.schema = schema
 	}
 	
-	public func serialize() -> [UInt8] {
+	public var serialized : Data {
 		guard schema == nil else {
 			fatalError("Data must be given when a schema is present")
 		}
-		return schemaInformation()
+		return Data(schemaInformation())
 	}
 	
-	public func serialize(avroValue: AvroValue) -> [UInt8] {
+	public func serializedFor(avroValue: AvroValue) -> Data {
 		guard schema != nil else {
 			fatalError("A Schema must be given when avroValue should be serialized")
 		}
-		return schemaInformation() + avroValue.encode(schema!)!
+		return Data(schemaInformation() + avroValue.encode(schema!)!)
 	}
 	
 	private func schemaInformation() -> [UInt8] {
@@ -52,5 +52,9 @@ public struct ReceivingSchemedContainer {
 		self.schemaId = (UInt16(binaryBuffer[0]) << 8) + UInt16(binaryBuffer[1])
 		self.schemaVersion = binaryBuffer[2]
 		self.serialized = Array(binaryBuffer.dropFirst(3))
+	}
+	
+	public init?(data: Data) {
+		self.init(binaryBuffer: data.map{$0})
 	}
 }

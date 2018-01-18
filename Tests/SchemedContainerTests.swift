@@ -52,7 +52,7 @@ class SchemedContainerTests: XCTestCase {
 		// THEN
 		XCTAssertEqual(receivingSchemdContainer.schemaId, 9250)
 		XCTAssertEqual(receivingSchemdContainer.schemaVersion, 115)
-		XCTAssertEqual(receivingSchemdContainer.serialized.isEmpty, true)
+		XCTAssertEqual(receivingSchemdContainer.serializedContent.isEmpty, true)
 	}
 	
 	func testReceivingSchemaContainerWithData() {
@@ -65,8 +65,8 @@ class SchemedContainerTests: XCTestCase {
 		// THEN
 		XCTAssertEqual(receivingSchemdContainer.schemaId, 9250)
 		XCTAssertEqual(receivingSchemdContainer.schemaVersion, 115)
-		XCTAssertEqual(receivingSchemdContainer.serialized.isEmpty, false)
-		XCTAssertEqual(receivingSchemdContainer.serialized, [0x23, 0x00, 0xff, 0xce])
+		XCTAssertEqual(receivingSchemdContainer.serializedContent.isEmpty, false)
+		XCTAssertEqual(receivingSchemdContainer.serializedContent, [0x23, 0x00, 0xff, 0xce])
 	}
 	
 	func testSendingSchemedContainerWithoutData() {
@@ -74,7 +74,7 @@ class SchemedContainerTests: XCTestCase {
 		let sendingSchemedContainer = SendingSchemedContainer(schemaId: 9250, schemaVersion: 115)
 		
 		// THEN
-		XCTAssertEqual(sendingSchemedContainer.serialize(), [0x24, 0x22, 0x73])
+		XCTAssertEqual(sendingSchemedContainer.serialized, Data([0x24, 0x22, 0x73]))
 	}
 	
 	func testSendingSchemedContainerWithData() {
@@ -84,9 +84,9 @@ class SchemedContainerTests: XCTestCase {
 		let ssc = SendingSchemedContainer(schemaId: 9250, schemaVersion: 115, schema: schema)
 		
 		// WHEN
-		let s = ssc.serialize(avroValue: data.toAvro())
+		let s = ssc.serializedFor(data.toAvro())
 		
 		// THEN
-		XCTAssertEqual(s, [0x24, 0x22, 0x73, 0x0a, 0x48, 0x65, 0x6c, 0x6c, 0x6f])
+		XCTAssertEqual(s, Data([0x24, 0x22, 0x73, 0x0a, 0x48, 0x65, 0x6c, 0x6c, 0x6f]))
 	}
 }

@@ -27,7 +27,7 @@ class SchemedContainerTests: XCTestCase {
 		var input: [UInt8] = [0x01, 0x02]
 		
 		// WHEN
-		var rsc = ReceivingSchemedContainer(binaryBuffer: input)
+		var rsc = SchemedContainer(binaryBuffer: input)
 		
 		// THEN
 		XCTAssertNil(rsc)
@@ -36,7 +36,7 @@ class SchemedContainerTests: XCTestCase {
 		input.append(0x03)
 		
 		// WHEN
-		rsc = ReceivingSchemedContainer(binaryBuffer: input)
+		rsc = SchemedContainer(binaryBuffer: input)
 		
 		// THEN
 		XCTAssertNotNil(rsc)
@@ -47,12 +47,12 @@ class SchemedContainerTests: XCTestCase {
 		let input: [UInt8] = [0x24, 0x22, 0x73]
 		
 		// WHEN
-		let receivingSchemdContainer = ReceivingSchemedContainer(binaryBuffer: input)!
+		let receivingSchemdContainer = SchemedContainer(binaryBuffer: input)!
 		
 		// THEN
 		XCTAssertEqual(receivingSchemdContainer.schemaId, 9250)
 		XCTAssertEqual(receivingSchemdContainer.schemaVersion, 115)
-		XCTAssertEqual(receivingSchemdContainer.serializedContent.isEmpty, true)
+		XCTAssertEqual(receivingSchemdContainer.content.isEmpty, true)
 	}
 	
 	func testReceivingSchemaContainerWithData() {
@@ -60,33 +60,33 @@ class SchemedContainerTests: XCTestCase {
 		let input: [UInt8] = [0x24, 0x22, 0x73, 0x23, 0x00, 0xff, 0xce]
 		
 		// WHEN
-		let receivingSchemdContainer = ReceivingSchemedContainer(binaryBuffer: input)!
+		let receivingSchemdContainer = SchemedContainer(binaryBuffer: input)!
 		
 		// THEN
 		XCTAssertEqual(receivingSchemdContainer.schemaId, 9250)
 		XCTAssertEqual(receivingSchemdContainer.schemaVersion, 115)
-		XCTAssertEqual(receivingSchemdContainer.serializedContent.isEmpty, false)
-		XCTAssertEqual(receivingSchemdContainer.serializedContent, [0x23, 0x00, 0xff, 0xce])
+		XCTAssertEqual(receivingSchemdContainer.content.isEmpty, false)
+		XCTAssertEqual(receivingSchemdContainer.content, [0x23, 0x00, 0xff, 0xce])
 	}
 	
 	func testSendingSchemedContainerWithoutData() {
 		// GIVEN, WHEN
-		let sendingSchemedContainer = SendingSchemedContainer(schemaId: 9250, schemaVersion: 115)
+		let sendingSchemedContainer = SchemedContainerFactory(schemaId: 9250, schemaVersion: 115)
 		
 		// THEN
-		XCTAssertEqual(sendingSchemedContainer.serialized, Data([0x24, 0x22, 0x73]))
+		XCTAssertEqual(sendingSchemedContainer.create.binaryBuffer,[0x24, 0x22, 0x73])
 	}
 	
 	func testSendingSchemedContainerWithData() {
 		// GIVEN
 		let schema = Schema("{\"name\":\"simpleString\",\"type\":\"string\"}")!
 		let data = "Hello"
-		let ssc = SendingSchemedContainer(schemaId: 9250, schemaVersion: 115, schema: schema)
+		let ssc = SchemedContainerFactory(schemaId: 9250, schemaVersion: 115, schema: schema)
 		
 		// WHEN
-		let s = ssc.serializedFor(data.toAvro())
+		let s = ssc.createFor(data.toAvro())
 		
 		// THEN
-		XCTAssertEqual(s, Data([0x24, 0x22, 0x73, 0x0a, 0x48, 0x65, 0x6c, 0x6c, 0x6f]))
+		XCTAssertEqual(s.data, Data([0x24, 0x22, 0x73, 0x0a, 0x48, 0x65, 0x6c, 0x6c, 0x6f]))
 	}
 }

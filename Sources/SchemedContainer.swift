@@ -55,7 +55,7 @@ public struct SchemedContainer {
 		}
 	}
 	
-	public init?(binaryBuffer: [UInt8]) {
+	public init?(_ binaryBuffer: [UInt8]) {
 		guard binaryBuffer.count >= 3 else {
 			return nil
 		}
@@ -65,8 +65,8 @@ public struct SchemedContainer {
 		self.content = Array(binaryBuffer.dropFirst(3))
 	}
 	
-	public init?(data: Data) {
-		self.init(binaryBuffer: data.map{$0})
+	public init?(_ data: Data) {
+		self.init(data.map{$0})
 	}
 	
 	public var binaryBuffer: [UInt8] {
@@ -97,5 +97,15 @@ extension SchemedContainer {
 		}
 		
 		return AvroValue(schema: schema, withBytes: content)
+	}
+	
+	public init?(_ avroValue: AvroValue?) {
+		guard
+			let bytes = avroValue?.bytes
+			else {
+				return nil
+		}
+		
+		self.init(bytes)
 	}
 }

@@ -27,7 +27,7 @@ class SchemedContainerTests: XCTestCase {
 		var input: [UInt8] = [0x01, 0x02]
 		
 		// WHEN
-		var rsc = SchemedContainer(binaryBuffer: input)
+		var rsc = SchemedContainer(input)
 		
 		// THEN
 		XCTAssertNil(rsc)
@@ -36,7 +36,7 @@ class SchemedContainerTests: XCTestCase {
 		input.append(0x03)
 		
 		// WHEN
-		rsc = SchemedContainer(binaryBuffer: input)
+		rsc = SchemedContainer(input)
 		
 		// THEN
 		XCTAssertNotNil(rsc)
@@ -47,7 +47,7 @@ class SchemedContainerTests: XCTestCase {
 		let input: [UInt8] = [0x24, 0x22, 0x73]
 		
 		// WHEN
-		let receivingSchemdContainer = SchemedContainer(binaryBuffer: input)!
+		let receivingSchemdContainer = SchemedContainer(input)!
 		
 		// THEN
 		XCTAssertEqual(receivingSchemdContainer.schemaId, 9250)
@@ -60,7 +60,7 @@ class SchemedContainerTests: XCTestCase {
 		let input: [UInt8] = [0x24, 0x22, 0x73, 0x23, 0x00, 0xff, 0xce]
 		
 		// WHEN
-		let receivingSchemdContainer = SchemedContainer(binaryBuffer: input)!
+		let receivingSchemdContainer = SchemedContainer(input)!
 		
 		// THEN
 		XCTAssertEqual(receivingSchemdContainer.schemaId, 9250)

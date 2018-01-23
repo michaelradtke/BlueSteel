@@ -90,7 +90,7 @@ extension SchemedContainer: Equatable {
 
 
 // MARK: - Extension to deal with AvroValue
-extension SchemedContainer {
+extension SchemedContainer : AvroValueConvertible {
 	
 	public func avroValueUsing(_ schema: Schema) -> AvroValue? {
 		guard !content.isEmpty else {
@@ -110,7 +110,7 @@ extension SchemedContainer {
 		self.init(bytes)
 	}
 	
-	public var avroBytesValue: AvroValue {
+	public func toAvro() -> AvroValue {
 		return AvroValue.avroBytesValue(binaryBuffer)
 	}
 }

@@ -11,6 +11,10 @@ import Foundation
 
 public struct SchemedContainerFactory {
 	
+	public enum ExtractionFailure: Error {
+		case unsupportedSchemaId, unsupportedSchemaVersion, contentMismatch
+	}
+	
 	public let schemaId: UInt16
 	public let schemaVersion: UInt8
 	public let schema: Schema?
@@ -36,6 +40,33 @@ public struct SchemedContainerFactory {
 			fatalError("")
 		}
 		return SchemedContainer(schemaId: schemaId, schemaVersion: schemaVersion, content: serialized)
+	}
+	
+	public func extract(_ container: SchemedContainer) throws -> AvroValue? {
+		guard self.schemaId == container.schemaId else {
+			throw ExtractionFailure.unsupportedSchemaId
+		}
+		guard self.schemaVersion == container.schemaVersion else {
+			throw ExtractionFailure.unsupportedSchemaVersion
+		}
+		
+		if let schema = self.schema {
+			if !container.content.isEmpty {
+				let avroValue = AvroValue(schema: schema, withBytes: container.content)
+				switch avroValue {
+				case .avroInvalidValue: throw ExtractionFailure.contentMismatch
+				default: return avroValue
+				}
+			} else {
+				throw ExtractionFailure.contentMismatch
+			}
+		} else {
+			if container.content.isEmpty {
+				return nil	// This is the expected result
+			} else {
+				throw ExtractionFailure.contentMismatch
+			}
+		}
 	}
 }
 
@@ -92,6 +123,7 @@ extension SchemedContainer: Equatable {
 // MARK: - Extension to deal with AvroValue
 extension SchemedContainer : AvroValueConvertible {
 	
+	@available(*, deprecated: 2.0.2, message: "Don't use this anymore!")
 	public func avroValueUsing(_ schema: Schema) -> AvroValue? {
 		guard !content.isEmpty else {
 			return nil

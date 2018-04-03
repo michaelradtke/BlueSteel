@@ -1,5 +1,5 @@
 //
-//  SchemedContainerTests.swift
+//  FlattenedTests.swift
 //  BlueSteelTests
 //
 //  Created by Michael Radtke on 17.01.18.
@@ -10,18 +10,18 @@ import XCTest
 import BlueSteel
 
 
-class SchemedContainerTests: XCTestCase {
+class FlattenedTests: XCTestCase {
 	
-	let testSchema = Schema("{\"name\":\"simpleString\",\"type\":\"string\"}")
+	let testSchema = Schema("{\"name\":\"simpleString\",\"type\":\"string\"}")!
 	let testData = "Hello"
 
 	
-	func testReceivedSchemedContainerMust3BytesLongAtLeast() {
+	func testReceivedFlattenedMust3BytesLongAtLeast() {
 		// GIVEN
 		var input: [UInt8] = [0x01, 0x02]
 		
 		// WHEN
-		var rsc = SchemedContainer(input)
+		var rsc = Flattened(input)
 		
 		// THEN
 		XCTAssertNil(rsc)
@@ -30,18 +30,18 @@ class SchemedContainerTests: XCTestCase {
 		input.append(0x03)
 		
 		// WHEN
-		rsc = SchemedContainer(input)
+		rsc = Flattened(input)
 		
 		// THEN
 		XCTAssertNotNil(rsc)
 	}
     
-	func testReceivingSchemaContainerWithoutData() {
+	func testReceivingFlattenedWithoutData() {
 		// GIVEN
 		let input: [UInt8] = [0x24, 0x21, 0x72]
 		
 		// WHEN
-		let receivingSchemdContainer = SchemedContainer(input)!
+		let receivingSchemdContainer = Flattened(input)!
 		
 		// THEN
 		XCTAssertEqual(receivingSchemdContainer.schemaId, 9249)
@@ -49,12 +49,12 @@ class SchemedContainerTests: XCTestCase {
 		XCTAssertEqual(receivingSchemdContainer.content.isEmpty, true)
 	}
 	
-	func testReceivingSchemaContainerWithData() {
+	func testReceivingFlattenedWithData() {
 		// GIVEN
 		let input: [UInt8] = [0x24, 0x22, 0x73, 0x23, 0x00, 0xff, 0xce]
 		
 		// WHEN
-		let receivingSchemdContainer = SchemedContainer(input)!
+		let receivingSchemdContainer = Flattened(input)!
 		
 		// THEN
 		XCTAssertEqual(receivingSchemdContainer.schemaId, 9250)
@@ -63,20 +63,20 @@ class SchemedContainerTests: XCTestCase {
 		XCTAssertEqual(receivingSchemdContainer.content, [0x23, 0x00, 0xff, 0xce])
 	}
 	
-	func testSendingSchemedContainerWithoutData() {
+	func testSendingFlattenedWithoutData() {
 		// GIVEN, WHEN
-		let sendingSchemedContainer = SchemedContainerFactory(schemaId: 9249, schemaVersion: 114)
+		let sendingSchemedContainer = PrimitiveFlatteningFactory(schemaId: 9249, schemaVersion: 114)
 		
 		// THEN
-		XCTAssertEqual(sendingSchemedContainer.create.binaryBuffer,[0x24, 0x21, 0x72])
+		XCTAssertEqual(sendingSchemedContainer.created.binaryBuffer,[0x24, 0x21, 0x72])
 	}
 	
-	func testSendingSchemedContainerWithData() {
+	func testSendingFlattenedWithData() {
 		// GIVEN
-		let ssc = SchemedContainerFactory(schemaId: 9250, schemaVersion: 115, schema: testSchema)
+		let ssc = FlatteningFactory(schemaId: 9250, schemaVersion: 115, schema: testSchema)
 		
 		// WHEN
-		let s = ssc.createFor(testData.toAvro())
+		let s = ssc.create(testData.toAvro())
 		
 		// THEN
 		XCTAssertEqual(s.data, Data([0x24, 0x22, 0x73, 0x0a, 0x48, 0x65, 0x6c, 0x6c, 0x6f]))
@@ -84,12 +84,12 @@ class SchemedContainerTests: XCTestCase {
 	
 	func testExtractAvroFromSchemedContainer() {
 		// GIVEN
-		let ssc = SchemedContainerFactory(schemaId: 9250, schemaVersion: 115, schema: testSchema)
-		let sc = ssc.createFor(testData.toAvro())
+		let ssc = FlatteningFactory(schemaId: 9250, schemaVersion: 115, schema: testSchema)
+		let sc = ssc.create(testData.toAvro())
 		
 		do {
 			// WHEN
-			let extracted = try ssc.extract(sc)?.string
+			let extracted = try ssc.extract(sc).string
 		
 			// THEN
 			XCTAssertNotNil(extracted)
@@ -101,15 +101,15 @@ class SchemedContainerTests: XCTestCase {
 	
 	func testExtractAvroFromSimpleSchemedContainer() {
 		// GIVEN
-		let ssc = SchemedContainerFactory(schemaId: 9249, schemaVersion: 114)
-		let sc = ssc.create
+		let ssc = PrimitiveFlatteningFactory(schemaId: 9249, schemaVersion: 114)
+		let sc = ssc.created
 		
 		do {
 			// WHEN
-			let extracted = try ssc.extract(sc)
+			try ssc.extract(sc)
 			
 			// THEN
-			XCTAssertNil(extracted)
+			
 		} catch {
 			XCTFail();
 		}
@@ -117,18 +117,18 @@ class SchemedContainerTests: XCTestCase {
 	
 	func testExtractFailsWhenSchemaIdDoesNotMatch() {
 		// GIVEN
-		let ssc1 = SchemedContainerFactory(schemaId: 9000, schemaVersion: 0)
-		let ssc2 = SchemedContainerFactory(schemaId: 9001, schemaVersion: 0)
-		let sc = ssc2.create
+		let ssc1 = PrimitiveFlatteningFactory(schemaId: 9000, schemaVersion: 0)
+		let ssc2 = PrimitiveFlatteningFactory(schemaId: 9001, schemaVersion: 0)
+		let sc = ssc2.created
 		
 		XCTAssertThrowsError(try ssc1.extract(sc))
 	}
 	
 	func testExtractFailsWhenSchemaVersionDoesNotMatch() {
 		// GIVEN
-		let ssc1 = SchemedContainerFactory(schemaId: 9000, schemaVersion: 0)
-		let ssc2 = SchemedContainerFactory(schemaId: 9000, schemaVersion: 1)
-		let sc = ssc2.create
+		let ssc1 = PrimitiveFlatteningFactory(schemaId: 9000, schemaVersion: 0)
+		let ssc2 = PrimitiveFlatteningFactory(schemaId: 9000, schemaVersion: 1)
+		let sc = ssc2.created
 		
 		XCTAssertThrowsError(try ssc1.extract(sc))
 	}

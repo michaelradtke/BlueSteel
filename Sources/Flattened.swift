@@ -72,7 +72,7 @@ public class FlatteningFactory {
 	
 	public func create(_ content: AvroValue) -> Flattened {
 		guard let serialized = content.encode(schema) else {
-			fatalError("There was a failure while encoding -> AVROVALUE: \(content) SCHEMA: \(schema)")
+			fatalError("There was a failure while encoding (\(schemaId)-\(schemaVersion)):: AVROVALUE: \(content) <-> SCHEMA: \(schema)")
 		}
 		return Flattened(schemaId: schemaId, schemaVersion: schemaVersion, content: serialized)
 	}

@@ -91,7 +91,7 @@ class SchemaDescriptorTests: XCTestCase {
 				else {
 					return nil
 			}
-			self.init(name: name, children: childlist.flatMap{Child(avroValue: $0)})
+			self.init(name: name, children: childlist.compactMap{Child(avroValue: $0)})
 		}
 	}
 

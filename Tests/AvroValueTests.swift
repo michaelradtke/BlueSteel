@@ -41,23 +41,78 @@ class AvroValueTests: XCTestCase {
         }
     }
 
-    func testIntValue() {
-        let avroBytes: [UInt8] = [0x96, 0xde, 0x87, 0x3]
+    func testIntValue_0() {
+        let avroBytes: [UInt8] = [0x0]
         let jsonSchema = "{ \"type\" : \"int\" }"
 
         if let value = AvroValue(jsonSchema: jsonSchema, withBytes: avroBytes)?.integer {
-            XCTAssertEqual(Int(value), 3209099, "Byte arrays don't match.")
+            XCTAssertEqual(Int(value), 0, "Byte arrays don't match.")
+        } else {
+            XCTAssert(false, "Failed. Nil value")
+        }
+    }
+    
+    func testIntValue_IntMin() {
+        let avroBytes: [UInt8] = [0xff, 0xff, 0xff, 0xff, 0xf]
+        let jsonSchema = "{ \"type\" : \"int\" }"
+        
+        if let value = AvroValue(jsonSchema: jsonSchema, withBytes: avroBytes)?.integer {
+            XCTAssertEqual(Int(value), Int(Int32.min), "Byte arrays don't match.")
+        } else {
+            XCTAssert(false, "Failed. Nil value")
+        }
+    }
+    
+    func testIntValue_IntMax() {
+        let avroBytes: [UInt8] = [0xfe, 0xff, 0xff, 0xff, 0xf]
+        let jsonSchema = "{ \"type\" : \"int\" }"
+        
+        if let value = AvroValue(jsonSchema: jsonSchema, withBytes: avroBytes)?.integer {
+            XCTAssertEqual(Int(value), Int(Int32.max), "Byte arrays don't match.")
         } else {
             XCTAssert(false, "Failed. Nil value")
         }
     }
 
-    func testLongValue() {
-        let avroBytes: [UInt8] = [0x96, 0xde, 0x87, 0x3]
+    func testLongValue_0() {
+        let avroBytes: [UInt8] = [0x0]
         let jsonSchema = "{ \"type\" : \"long\" }"
-
+        
         if let value = AvroValue(jsonSchema: jsonSchema, withBytes: avroBytes)?.long {
-            XCTAssertEqual(Int(value), 3209099, "Byte arrays don't match.")
+            XCTAssertEqual(Int(value), 0, "Byte arrays don't match.")
+        } else {
+            XCTAssert(false, "Failed. Nil value")
+        }
+    }
+    
+    func testLongValue_LongMin() {
+        let avroBytes: [UInt8] = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf]
+        let jsonSchema = "{ \"type\" : \"long\" }"
+        
+        if let value = AvroValue(jsonSchema: jsonSchema, withBytes: avroBytes)?.long {
+            XCTAssertEqual(Int(value), Int.min, "Byte arrays don't match.")
+        } else {
+            XCTAssert(false, "Failed. Nil value")
+        }
+    }
+    
+    func testLongValue_LongMax() {
+        let avroBytes: [UInt8] = [0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf]
+        let jsonSchema = "{ \"type\" : \"long\" }"
+        
+        if let value = AvroValue(jsonSchema: jsonSchema, withBytes: avroBytes)?.long {
+            XCTAssertEqual(Int(value), Int.max, "Byte arrays don't match.")
+        } else {
+            XCTAssert(false, "Failed. Nil value")
+        }
+    }
+    
+    func testLongValue() {
+        let avroBytes: [UInt8] = [0xda, 0x94, 0x87, 0xee, 0xdf, 0x5]
+        let jsonSchema = "{ \"type\" : \"long\" }"
+        
+        if let value = AvroValue(jsonSchema: jsonSchema, withBytes: avroBytes)?.long {
+            XCTAssertEqual(Int(value), 98765432109, "Byte arrays don't match.")
         } else {
             XCTAssert(false, "Failed. Nil value")
         }

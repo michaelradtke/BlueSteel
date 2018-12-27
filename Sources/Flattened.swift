@@ -97,7 +97,7 @@ public class FlatteningFactory {
 }
 
 /// A Flattened value
-public struct Flattened {
+public struct Flattened: Hashable {
 	
 	public let schemaId: UInt16
 	public let schemaVersion: UInt8
@@ -133,16 +133,6 @@ public struct Flattened {
 	
 	public var data: Data {
 		return Data(binaryBuffer)
-	}
-}
-
-
-extension Flattened: Equatable {
-	
-	public static func ==(lhs: Flattened, rhs: Flattened) -> Bool {
-		return lhs.schemaId == rhs.schemaId
-				&& lhs.schemaVersion == rhs.schemaVersion
-				&& lhs.binaryBuffer == rhs.content
 	}
 }
 
